@@ -3,7 +3,7 @@ import { HiSun, HiMoon, HiBookmark, HiChartBar, HiMenu, HiX, HiHome, HiPhotograp
 import { useNavigate, useLocation } from "react-router-dom";
 
 // ACCEPT NEW PROP: isRefreshing
-const Navbar = ({ theme, toggleTheme, searchQuery, setSearchQuery, onRefresh, isRefreshing }) => {
+const Navbar = ({ theme, toggleTheme, onRefresh, isRefreshing }) => { 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +17,7 @@ const Navbar = ({ theme, toggleTheme, searchQuery, setSearchQuery, onRefresh, is
     { name: "Home", path: "/home", icon: HiHome },
     { name: "Reels", path: "/reels", icon: HiPhotograph },
     { name: "Analytics", path: "/analytics", icon: HiChartBar },
-    { name: "Bookmarks", path: "/bookmarks", icon: HiBookmark },
+    { name: "Watchlist", path: "/bookmarks", icon: HiBookmark }, // Renamed Bookmarks to Watchlist
     { name: "Profile", path: "/profile", icon: HiUserCircle },
   ];
 
@@ -40,7 +40,7 @@ const Navbar = ({ theme, toggleTheme, searchQuery, setSearchQuery, onRefresh, is
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-6 md:px-12">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavigation("/home")}>
           <span className="text-gray-900 dark:text-white text-2xl font-bold">
-            News<span className="text-blue-500">Pulse</span>
+            Film<span className="text-blue-500">Mate</span>
           </span>
         </div>
 
@@ -58,8 +58,8 @@ const Navbar = ({ theme, toggleTheme, searchQuery, setSearchQuery, onRefresh, is
             <button 
               onClick={onRefresh} 
               className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition" 
-              title={isRefreshing ? "Refreshing..." : "Refresh News"}
-              disabled={isRefreshing} // DISABLE while fetching
+              title={isRefreshing ? "Fetching new movies..." : "Fetch New Movies"}
+              disabled={isRefreshing} 
             >
               {/* CONDITIONAL CLASS */}
               <HiRefresh className={`w-5 h-5 ${isRefreshing ? "animate-spin-slow" : ""}`} />
@@ -95,7 +95,7 @@ const Navbar = ({ theme, toggleTheme, searchQuery, setSearchQuery, onRefresh, is
               disabled={isRefreshing}
             >
                 <HiRefresh className={`w-5 h-5 ${isRefreshing ? "animate-spin-slow" : ""}`} />
-                <span>{isRefreshing ? "Refreshing..." : "Refresh News"}</span>
+                <span>{isRefreshing ? "Fetching new movies..." : "Fetch New Movies"}</span>
             </button>
           </div>
         </div>

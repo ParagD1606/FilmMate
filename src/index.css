@@ -2,48 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Keyframes for Landing Page Animation */
+/* ===========================
+   WORD CLOUD FLOAT ANIMATION
+   =========================== */
 
-@keyframes fade-in-up {
-  from {
+@keyframes floatIn {
+  0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(8px) scale(0.92);
   }
-  to {
+  60% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-2px) scale(1.02);
   }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
+  100% {
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Apply the custom animation names using Tailwind's utility names for the JSX above */
-.animate-fade-in-up {
-    animation-name: fade-in-up;
+/* Applies floating animation to each word */
+.animate-cloud span {
+  display: inline-block;
+  animation: floatIn 0.45s ease forwards;
 }
 
-.animate-fade-in {
-    animation-name: fade-in;
-}
-
-/* NEW: Animation for Refresh Button */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* NEW: Utility class for spinning animation */
-.animate-spin-slow {
-    animation: spin 1s linear infinite;
-}
+/* Nice stagger effect (each word delayed a little) */
+.animate-cloud span:nth-child(1) { animation-delay: 0.02s; }
+.animate-cloud span:nth-child(2) { animation-delay: 0.04s; }
+.animate-cloud span:nth-child(3) { animation-delay: 0.06s; }
+.animate-cloud span:nth-child(4) { animation-delay: 0.08s; }
+.animate-cloud span:nth-child(5) { animation-delay: 0.10s; }
+/* You don't need all — this creates natural stagger */

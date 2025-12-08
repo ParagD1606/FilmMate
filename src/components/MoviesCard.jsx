@@ -1,18 +1,12 @@
 import React, { useCallback } from "react";
-import { HiOutlineBookmark, HiBookmark, HiVolumeUp } from "react-icons/hi";
+import { HiOutlineBookmark, HiBookmark, HiVolumeUp, HiCalendar } from "react-icons/hi";
 
-// Function to detect if content is likely Hindi based on the first few characters (Devanagari script)
-const isLikelyHindi = (text) => {
-    // The range \u0900-\u097F covers most Devanagari characters
-    // Check if any Devanagari characters are present in the first 50 characters
-    return text && /[\u0900-\u097F]/.test(text.slice(0, 50));
-};
+// Renamed NewsCard to MovieCard
+const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
 
-const NewsCard = ({ article, onBookmark, isBookmarked }) => {
-  
   const handleTextToSpeech = useCallback(() => {
-    const textToSpeak = `${article.title}. ${
-      article.description || article.content || "No description available."
+    const textToSpeak = `${movie.title}, released in ${movie.year}. Plot summary: ${
+      movie.description || "No description available."
     }`;
 
     if (window.speechSynthesis.speaking) {
@@ -23,15 +17,18 @@ const NewsCard = ({ article, onBookmark, isBookmarked }) => {
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.rate = 1;
     utterance.pitch = 1;
-    
-    // --- FIX: Dynamically set language ---
-    // If the text is detected as Hindi, set the language to hi-IN.
-    // Otherwise, default to English (en-US).
-    utterance.lang = isLikelyHindi(textToSpeak) ? "hi-IN" : "en-US"; 
-    // ------------------------------------
+    // Default to English. You can expand this with more complex language detection if needed.
+    utterance.lang = "en-US"; 
 
     window.speechSynthesis.speak(utterance);
-  }, [article.title, article.description, article.content]);
+  }, [movie.title, movie.year, movie.description]);
+
+
+  const handleViewDetails = () => {
+    // Retain the existing view details functionality, now separated from the volume icon
+    console.log(`Viewing details for: ${movie.title} (${movie.year})`);
+    alert(`Viewing Details for ${movie.title}.\nGenre: ${movie.genre}\nYear: ${movie.year}`);
+  };
 
   const handleImageError = (e) => {
     e.target.onerror = null; // Prevent infinite loop
@@ -47,50 +44,56 @@ const NewsCard = ({ article, onBookmark, isBookmarked }) => {
                  hover:shadow-xl hover:shadow-blue-500/20 
                  dark:hover:shadow-blue-800/20"
     >
-      {/* Article Image */}
+      {/* Movie Poster Image */}
       <img
-        src={article.urlToImage || "/fallback.jpg"}
+        src={movie.posterUrl || "/fallback.jpg"} 
         onError={handleImageError}
-        alt={article.title}
+        alt={movie.title}
         loading="lazy"
-        className="w-full h-44 object-cover rounded-lg select-none"
+        className="w-full h-64 object-cover rounded-lg select-none"
       />
 
-      {/* Article Title */}
+      {/* Movie Title */}
       <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white line-clamp-2">
-        {article.title}
+        {movie.title} ({movie.year})
       </h3>
 
-      {/* Description */}
+      {/* Genre and Year info */}
+      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+        <HiCalendar className="w-4 h-4" />
+        <span className="font-semibold">{movie.year}</span>
+        <span className="mx-2">|</span>
+        <span className="font-medium text-blue-600 dark:text-blue-400">{movie.genre}</span>
+      </div>
+
+      {/* Description / Plot Summary */}
       <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 flex-grow">
-        {article.description || "No description available for this article."}
+        {movie.description || "No plot summary available."}
       </p>
 
-      {/* Footer: Read link + buttons */}
+      {/* Footer: Details link + buttons */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-700/50">
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          onClick={handleViewDetails}
           className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition"
         >
-          Read Full Article →
-        </a>
+          View Details →
+        </button>
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
-          {/* Listen Button */}
+          {/* LISTEN BUTTON: Now handles Text-to-Speech */}
           <button
             onClick={handleTextToSpeech}
-            title="Listen to Article Summary"
+            title="Listen to Movie Details"
             className="p-2 rounded-full text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition transform hover:scale-110"
           >
             <HiVolumeUp className="w-5 h-5" />
           </button>
 
-          {/* Bookmark Button */}
+          {/* Bookmark (Watchlist) Button */}
           <button
-            onClick={() => onBookmark(article)}
-            title={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
+            onClick={() => onBookmark(movie)}
+            title={isBookmarked ? "Remove from Watchlist" : "Add to Watchlist"}
             className="p-1"
           >
             {isBookmarked ? (
@@ -105,4 +108,4 @@ const NewsCard = ({ article, onBookmark, isBookmarked }) => {
   );
 };
 
-export default NewsCard;
+export default MovieCard;

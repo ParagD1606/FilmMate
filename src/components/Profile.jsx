@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { HiUserCircle, HiMail, HiKey, HiArrowLeft, HiLogout, HiMailOpen } from "react-icons/hi";
-// 1. Import useNavigate
 import { useNavigate } from "react-router-dom"; 
+import { CATEGORIES } from "../services/movieData"; // <-- IMPORTED CATEGORIES
 
 // Mock User Data for demonstration
 const mockUser = {
@@ -11,32 +11,17 @@ const mockUser = {
   lastLogin: "Today",
 };
 
-// Available categories for preferences (matching those in Home.jsx)
-const CATEGORIES = [
-  "action",
-  "comedy",
-  "drama",
-  "horror",
-  "romance",
-  "sci-fi",
-  "animation",
-  "documentary"
-];
+// Removed hardcoded CATEGORIES definition
 
-// 2. Remove 'setPage' prop
 const Profile = ({ bookmarks = [] }) => {
-    // 3. Initialize useNavigate
     const navigate = useNavigate();
-    // Mock state for user preferences
     const [receivesEmails, setReceivesEmails] = useState(true);
-    const [preferences, setPreferences] = useState(['General', 'Technology']);
-    const [saveStatus, setSaveStatus] = useState(null); // 'success', 'error', or null
+    const [preferences, setPreferences] = useState(['Action', 'Sci-Fi']); 
+    const [saveStatus, setSaveStatus] = useState(null); 
 
     const handleLogout = () => {
-        // In a real app: Clear token, clear user state, then redirect.
         console.log("User logged out.");
         alert("Logged out successfully! Redirecting to Landing Page.");
-        // 4. Use navigate to the root path
         navigate("/"); 
     };
     
@@ -50,7 +35,6 @@ const Profile = ({ bookmarks = [] }) => {
     };
     
     const handleSavePreferences = () => {
-        // Simulate API call to save preferences
         console.log("Saving preferences:", { receivesEmails, preferences });
         setSaveStatus('success');
         setTimeout(() => setSaveStatus(null), 3000);
@@ -94,8 +78,7 @@ const Profile = ({ bookmarks = [] }) => {
                     <span className="font-medium text-gray-800 dark:text-gray-200">{mockUser.memberSince}</span>
                 </p>
                 <p className="flex justify-between text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">Bookmarks:</span>
-                    {/* DYNAMIC VALUE: Use the length of the bookmarks array */}
+                    <span className="text-gray-500 dark:text-gray-400">Watchlist Items:</span>
                     <span className="font-medium text-gray-800 dark:text-gray-200">{bookmarks.length}</span>
                 </p>
                 <p className="flex justify-between text-sm">
@@ -121,7 +104,6 @@ const Profile = ({ bookmarks = [] }) => {
                     </button>
                     
                     <button 
-                        // 4. Use navigate
                         onClick={() => navigate("/home")}
                         className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/70 transition"
                     >
@@ -138,13 +120,13 @@ const Profile = ({ bookmarks = [] }) => {
              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl dark:shadow-gray-950/50 border border-gray-100 dark:border-gray-700">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <HiMailOpen className="w-6 h-6 text-blue-500" />
-                    Email Preferences
+                    Movie/Genre Preferences
                 </h3>
 
                 {/* Daily Email Toggle */}
                 <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-4">
                     <label htmlFor="dailyEmail" className="text-lg font-medium text-gray-800 dark:text-gray-200">
-                        Receive Daily Top Movies Digest?
+                        Receive Weekly Top Movie Suggestions?
                     </label>
                     <input
                         type="checkbox"
@@ -164,7 +146,7 @@ const Profile = ({ bookmarks = [] }) => {
                         Select your preferred categories:
                     </p>
                     <div className="flex flex-wrap gap-2">
-                        {CATEGORIES.map(cat => (
+                        {CATEGORIES.map(cat => ( // <-- Uses imported CATEGORIES
                             <button
                                 key={cat}
                                 onClick={() => handleCategoryToggle(cat)}
@@ -182,7 +164,7 @@ const Profile = ({ bookmarks = [] }) => {
                     </div>
                     {!receivesEmails && (
                          <p className="mt-2 text-sm text-red-500 dark:text-red-400">
-                            Enable daily emails above to select preferences.
+                            Enable weekly suggestions above to select preferences.
                         </p>
                     )}
                 </div>
