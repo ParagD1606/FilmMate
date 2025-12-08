@@ -1,8 +1,10 @@
+// paragd1606/filmmate/FilmMate-d923bdcf21c92fb574060a6fef2f68b2eb645ee0/src/components/MoviesCard.jsx
 import React, { useCallback, useState } from "react";
 import {
   HiOutlineBookmark,
   HiBookmark,
   HiVolumeUp,
+  HiVolumeOff, // Added for the stop button look
   HiCalendar,
   HiTranslate,
 } from "react-icons/hi"; 
@@ -15,24 +17,55 @@ const LANGUAGE_OPTIONS = [
   { code: "fr", name: "French" },
 ];
 
-const speakText = (text, language) => {
+// Modified to accept callbacks for setting the playing status
+const speakText = (text, language, onStart, onEnd) => {
   if (!text) return;
 
-  window.speechSynthesis.cancel();
+  // Cancel any previous speech immediately
+  window.speechSynthesis.cancel(); 
+  
+  // Exit immediately if the API is not available
+  if (!window.speechSynthesis) return;
+
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 1;
   utterance.pitch = 1;
 
-  const voices = window.speechSynthesis.getVoices();
-  utterance.voice =
-    voices.find((v) => v.lang.startsWith(language)) || voices.find((v) => v.lang.startsWith("en"));
-  utterance.lang = language;
+  utterance.onstart = onStart;
+  utterance.onend = onEnd;
+  utterance.onerror = onEnd; // Also trigger onEnd on error
 
-  window.speechSynthesis.speak(utterance);
+  // Voice selection logic remains the same
+  const voices = window.speechSynthesis.getVoices();
+  const englishVoice = voices.find((v) => v.lang.startsWith(language)) || voices.find((v) => v.lang.startsWith("en"));
+  if (englishVoice) {
+      utterance.voice = englishVoice;
+      utterance.lang = language;
+  } else {
+      // Use system default if specific voice isn't found, 
+      // but ensure lang attribute is set for proper pronunciation fallback
+      utterance.lang = language; 
+  }
+
+  // Use a slight delay as a workaround for browser voice initialization issues
+  setTimeout(() => window.speechSynthesis.speak(utterance), 100);
 };
+
+// New function to handle stopping globally
+const stopText = () => {
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+    }
+};
+
 
 const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [isSpeaking, setIsSpeaking] = useState(false); // NEW STATE for TTS status
+  
+  // Callbacks to manage the speaking state
+  const handleSpeechStart = useCallback(() => setIsSpeaking(true), []);
+  const handleSpeechEnd = useCallback(() => setIsSpeaking(false), []);
   
   // Logic to determine the current translation based on selection.
   const currentTranslation = 
@@ -43,9 +76,26 @@ const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
   const loading = false; 
 
   const handleTextToSpeech = useCallback(() => {
+    // If currently speaking, the play button acts as stop.
+    if (isSpeaking) {
+        stopText();
+        handleSpeechEnd();
+        return;
+    }
+
     const textToSpeak = `${currentTranslation.title}, released in ${movie.year}. ${currentTranslation.description || "No description available."}`;
-    speakText(textToSpeak, selectedLanguage);
-  }, [currentTranslation, movie.year, selectedLanguage]);
+    
+    // Pass state handlers to the utility function
+    speakText(textToSpeak, selectedLanguage, handleSpeechStart, handleSpeechEnd);
+    
+  }, [currentTranslation, movie.year, selectedLanguage, isSpeaking, handleSpeechStart, handleSpeechEnd]);
+  
+  // Handler for manual language change
+  const handleLanguageChange = (e) => {
+    stopText(); // Stop current speech if language changes
+    handleSpeechEnd();
+    setSelectedLanguage(e.target.value);
+  }
 
   const handleViewDetails = () => {
     alert(
@@ -107,22 +157,20 @@ const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold 
                      hover:bg-blue-700 transition duration-300 shadow-lg shadow-blue-500/30"
         >
-          View Details →
+          Watch Now →
         </button>
 
-        {/* Action Group */}
-        <div className="flex items-center gap-4">
+        {/* Action Group: Changed gap-4 to gap-2 to prevent overflow in narrow cards */}
+        <div className="flex items-center gap-2">
             
-          {/* Language Selector */}
-          <div className="flex items-center gap-2">
-            <HiTranslate className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          {/* Language Selector: Tightened spacing and reduced icon size */}
+          <div className="flex items-center gap-1">
+            <HiTranslate className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             <select
               value={selectedLanguage}
-              onChange={(e) => {
-                window.speechSynthesis.cancel();
-                setSelectedLanguage(e.target.value);
-              }}
-              className="text-xs py-1 px-2 rounded-md bg-gray-100 dark:bg-gray-700 
+              onChange={handleLanguageChange}
+              // Reduced padding (py-0.5, px-1) for horizontal space saving
+              className="text-xs py-0.5 px-1 rounded-md bg-gray-100 dark:bg-gray-700 
                          text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600
                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-150"
               disabled={loading}
@@ -135,15 +183,21 @@ const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
             </select>
           </div>
 
-          {/* Text-to-Speech Button */}
+          {/* Text-to-Speech Button (Toggle Play/Stop) */}
           <button
             onClick={handleTextToSpeech}
-            title={`Listen in ${LANGUAGE_OPTIONS.find(l => l.code === selectedLanguage)?.name || "English"}`}
+            title={isSpeaking ? "Stop Narration" : `Listen in ${LANGUAGE_OPTIONS.find(l => l.code === selectedLanguage)?.name || "English"}`}
             className={`p-2 rounded-full transition transform hover:scale-110 
-              text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300`}
+              ${isSpeaking 
+                  ? 'text-red-500 dark:text-red-400 hover:text-red-600' // Stop icon uses red
+                  : 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300' // Play icon uses blue
+              }`}
             disabled={loading}
           >
-            <HiVolumeUp className="w-6 h-6" />
+            {isSpeaking 
+                ? <HiVolumeOff className="w-6 h-6" /> // Stop icon
+                : <HiVolumeUp className="w-6 h-6" /> // Play icon
+            }
           </button>
 
           {/* Bookmark Button */}

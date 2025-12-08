@@ -1,6 +1,7 @@
+// paragd1606/filmmate/FilmMate-d923bdcf21c92fb574060a6fef2f68b2eb645ee0/src/components/Home.jsx
 import React, { useState, useMemo } from "react";
 import MovieCard from "./MoviesCard"; 
-import { HiSearch, HiArrowLeft, HiArrowRight } from "react-icons/hi";
+import { HiSearch, HiArrowLeft, HiArrowRight, HiMicrophone } from "react-icons/hi";
 import { DUMMY_MOVIES, CATEGORIES } from "../services/movieData"; // <-- IMPORTED DATA
 
 const PAGE_SIZE = 6;
@@ -37,6 +38,54 @@ const Home = ({
   setSearchQuery,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isListening, setIsListening] = useState(false);
+
+  const startListening = () => {
+    // Check for browser support (using webkit prefix for wider compatibility)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("Speech recognition is not supported by this browser.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false; // Capture a single phrase
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+        setIsListening(true);
+        setSearchQuery(""); // Clear search query when starting listening
+        setGenre(""); 
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join('');
+        
+        setSearchQuery(transcript);
+        setIsListening(false);
+        recognition.stop();
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        alert(`Voice search error: ${event.error}. Try again.`);
+    };
+
+    recognition.onend = () => {
+        setIsListening(false);
+    };
+
+    try {
+        recognition.start();
+    } catch (error) {
+        console.error("Error starting recognition:", error);
+        setIsListening(false);
+    }
+  };
 
   // Filter movies based on search query and selected genre
   const filteredMovies = useMemo(() => {
@@ -101,12 +150,28 @@ const Home = ({
           <div className="relative w-full max-w-xl flex-grow">
             <input
               type="text"
-              placeholder="Search movies by title, year, or genre..."
+              placeholder={isListening ? "Listening... Speak your search query." : "Search movies by title, year, or genre..."}
               value={searchQuery}
               onChange={handleSearchChange}
-              className="w-full py-3 pl-12 pr-4 border-2 border-blue-500/80 dark:border-blue-600 rounded-full bg-white dark:bg-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transition shadow-lg"
+              // Adjusted padding-right (pr-12) to accommodate the mic button
+              className="w-full pl-12 pr-12 py-3 border-2 border-blue-500/80 dark:border-blue-600 rounded-full bg-white dark:bg-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transition shadow-lg"
+              disabled={isListening} // Disable typing while listening
             />
             <HiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-500 dark:text-blue-400" />
+            
+            {/* NEW: Voice Input Button (Microphone) */}
+            <button
+              onClick={startListening}
+              disabled={isListening} // Disable while listening
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-all duration-200 
+                ${isListening 
+                    ? 'bg-red-500 text-white animate-pulse' 
+                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                }`}
+              title={isListening ? "Listening..." : "Start Voice Search"}
+            >
+              <HiMicrophone className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
