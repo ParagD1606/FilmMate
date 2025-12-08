@@ -27,7 +27,8 @@ const DUMMY_MOVIES = [
         description: "Un marine paraplégique envoyé sur la lune Pandora pour une mission unique est déchiré entre suivre les ordres et protéger le monde qu'il considère comme sa maison."
       }
     },
-    posterUrl: avatar
+    posterUrl: avatar,
+    rating: 9.8
   },
   {
     id: 2,
@@ -51,7 +52,8 @@ const DUMMY_MOVIES = [
         description: "À la dérive dans l'espace sans nourriture ni eau, Tony Stark envoie un message à Pepper Potts alors que son approvisionnement en oxygène commence à diminuer. Pendant ce temps, les Avengers restants se préparent pour un dernier combat."
       }
     },
-    posterUrl: endgame
+    posterUrl: endgame,
+    rating: 9.9
   },
   {
     id: 3,
@@ -75,7 +77,8 @@ const DUMMY_MOVIES = [
         description: "Deux hommes emprisonnés nouent des liens au fil des ans, trouvant réconfort et rédemption finale à travers des actes de décence commune."
       }
     },
-    posterUrl: redemption
+    posterUrl: redemption,
+    rating: 9.8
   },
   {
     id: 4,
@@ -99,7 +102,8 @@ const DUMMY_MOVIES = [
         description: "Lorsque la menace connue sous le nom du Joker émerge de son passé mystérieux, il sème le chaos et la destruction sur les habitants de Gotham."
       }
     },
-    posterUrl: "https://host.trivialbeing.org/up/small/tdk-jun26-joker-subway.jpg"
+    posterUrl: "https://host.trivialbeing.org/up/small/tdk-jun26-joker-subway.jpg",
+    rating: 9.8
   },
   {
     id: 5,
@@ -123,7 +127,8 @@ const DUMMY_MOVIES = [
         description: "Les vies de deux tueurs à gages, d'un boxeur, d'un gangster et de sa femme, et d'un couple de bandits de restaurant s'entremêlent dans quatre histoires de violence et de rédemption."
       }
     },
-    posterUrl: "https://www.shutterstock.com/image-photo/napoliitaly-november-152024-movie-poster-260nw-2546155485.jpg"
+    posterUrl: "https://www.shutterstock.com/image-photo/napoliitaly-november-152024-movie-poster-260nw-2546155485.jpg",
+    rating: 9.8
   },
   {
     id: 6,
@@ -147,7 +152,8 @@ const DUMMY_MOVIES = [
         description: "Un employé de bureau insomniaque cherchant un moyen de changer sa vie croise le chemin d'un fabricant de savon insouciant et lance un club de combat clandestin qui évolue en quelque chose de bien plus grand."
       }
     },
-    posterUrl: "https://wallpapers.com/images/featured/fight-club-pictures-ibgirl59hxvxr5y4.jpg"
+    posterUrl: "https://wallpapers.com/images/featured/fight-club-pictures-ibgirl59hxvxr5y4.jpg",
+    rating: 8.9
   },
   {
     id: 7,
@@ -171,7 +177,8 @@ const DUMMY_MOVIES = [
         description: "Un voleur qui dérobe des secrets d'entreprise par le biais d'une technologie de partage de rêves se voit confier la tâche inverse d'implanter une idée dans l'esprit d'un PDG."
       }
     },
-    posterUrl: "https://m.media-amazon.com/images/I/71SjZkFDdGL._AC_UF1000,1000_QL80_.jpg"
+    posterUrl: "https://m.media-amazon.com/images/I/71SjZkFDdGL._AC_UF1000,1000_QL80_.jpg",
+    rating: 9.8
   },
   {
     id: 8,
@@ -195,7 +202,8 @@ const DUMMY_MOVIES = [
         description: "Un hacker apprend de mystérieux rebelles la véritable nature de sa réalité et son rôle dans la guerre contre ses contrôleurs."
       }
     },
-    posterUrl: "https://ih1.redbubble.net/image.3076041117.0867/fposter,small,wall_texture,square_product,600x600.jpg"
+    posterUrl: "https://ih1.redbubble.net/image.3076041117.0867/fposter,small,wall_texture,square_product,600x600.jpg",
+    rating: 9.4
   },
   {
     id: 9,
@@ -219,7 +227,8 @@ const DUMMY_MOVIES = [
         description: "Une équipe d'explorateurs voyage à travers un trou de ver dans l'espace pour tenter d'assurer la survie de l'humanité."
       }
     },
-    posterUrl: "https://cdn.mos.cms.futurecdn.net/z8AEXEHERwLGdQtBUSUECU.jpg"
+    posterUrl: "https://cdn.mos.cms.futurecdn.net/z8AEXEHERwLGdQtBUSUECU.jpg",
+    rating: 9.5
   },
   {
     id: 10,
@@ -243,7 +252,8 @@ const DUMMY_MOVIES = [
         description: "Lors du déménagement de sa famille en banlieue, une fille de 10 ans boudeuse s'égare dans un monde régi par des dieux, des sorcières et des esprits, et où les humains sont changés en bêtes."
       }
     },
-    posterUrl: "https://images.squarespace-cdn.com/content/v1/5b1591bf70e802d439edd4de/2485aaa6-313a-4296-a4b0-239f7215a2eb/Spirited+Away+-+Hero.jpg"
+    posterUrl: "https://images.squarespace-cdn.com/content/v1/5b1591bf70e802d439edd4de/2485aaa6-313a-4296-a4b0-239f7215a2eb/Spirited+Away+-+Hero.jpg",
+    rating: 8.3
   },
 
   // --- Indian (10 Movies) ---
@@ -269,7 +279,8 @@ const DUMMY_MOVIES = [
         description: "L'ancien lutteur Mahavir Singh Phogat décide d'entraîner ses filles Geeta et Babita pour qu'elles deviennent des lutteuses de classe mondiale."
       }
     },
-    posterUrl: "https://images.firstpost.com/wp-content/uploads/2016/07/Dangal-poster-large-380.jpg?im=FitAndFill=(596,336)"
+    posterUrl: "https://images.firstpost.com/wp-content/uploads/2016/07/Dangal-poster-large-380.jpg?im=FitAndFill=(596,336)",
+    rating: 9.5
   },
   {
     id: 12,
@@ -293,7 +304,8 @@ const DUMMY_MOVIES = [
         description: "Des années après les événements de The Beginning, Sivagami, la reine mère, est contrainte d'exécuter Baahubali. Son fils doit maintenant venger la mort de son père."
       }
     },
-    posterUrl: "https://xstreamcp-assets-msp.streamready.in/assets/SONYLIV_VOD/MOVIE/64b6ac9c1e42943d88c5643c/images/bahubalithebeginning_1080x1080_clean_airtel_square.jpg"
+    posterUrl: "https://xstreamcp-assets-msp.streamready.in/assets/SONYLIV_VOD/MOVIE/64b6ac9c1e42943d88c5643c/images/bahubalithebeginning_1080x1080_clean_airtel_square.jpg",
+    rating: 9.6
   },
   {
     id: 13,
@@ -317,7 +329,8 @@ const DUMMY_MOVIES = [
         description: "Une histoire fictive sur deux révolutionnaires légendaires, Alluri Sitarama Raju et Komaram Bheem, et leur voyage loin de chez eux avant qu'ils ne commencent à se battre pour leur pays dans les années 1920."
       }
     },
-    posterUrl: "https://static01.nyt.com/images/2023/03/28/mosaic-oscars-naatunaatu68328-889/mosaic-oscars-naatunaatu68328-889-square640.jpg"
+    posterUrl: "https://static01.nyt.com/images/2023/03/28/mosaic-oscars-naatunaatu68328-889/mosaic-oscars-naatunaatu68328-889-square640.jpg",
+    rating: 9.5
   },
   {
     id: 14,
@@ -341,7 +354,8 @@ const DUMMY_MOVIES = [
         description: "L'histoire de Rocky, qui, après s'être imposé comme le chef des Kolar Gold Fields, doit maintenir sa suprématie sur ses ennemis et les fonctionnaires du gouvernement."
       }
     },
-    posterUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGpBoHaFTj9Uc0x-1o3HRZTxo8DrmZRGkrYw&s"
+    posterUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGpBoHaFTj9Uc0x-1o3HRZTxo8DrmZRGkrYw&s",
+    rating: 9.5
   },
   {
     id: 15,
@@ -365,7 +379,8 @@ const DUMMY_MOVIES = [
         description: "Deux amis se lancent à la recherche d'un camarade perdu qui les a inspirés à penser différemment, même si le monde les traitait d'idiots."
       }
     },
-    posterUrl: idiots
+    posterUrl: idiots,
+    rating: 9.5
   },
   {
     id: 16,
@@ -389,7 +404,8 @@ const DUMMY_MOVIES = [
         description: "Un extraterrestre atterrit sur Terre, mais lorsque son dispositif de communication est volé, il doit apprendre les étranges coutumes de l'humanité pour le récupérer et rentrer chez lui."
       }
     },
-    posterUrl: "https://w0.peakpx.com/wallpaper/380/356/HD-wallpaper-pk-movie-motion-poster-thumbnail.jpg"
+    posterUrl: "https://w0.peakpx.com/wallpaper/380/356/HD-wallpaper-pk-movie-motion-poster-thumbnail.jpg",
+    rating: 9.5
   },
   {
     id: 17,
@@ -413,7 +429,8 @@ const DUMMY_MOVIES = [
         description: "Un garçon de huit ans est considéré comme un fauteur de troubles paresseux, jusqu'à ce que le nouveau professeur d'art découvre le vrai problème: la dyslexie."
       }
     },
-    posterUrl: "https://stat5.bollywoodhungama.in/wp-content/uploads/2016/03/51206139.jpg"
+    posterUrl: "https://stat5.bollywoodhungama.in/wp-content/uploads/2016/03/51206139.jpg",
+    rating: 9.2
   },
   {
     id: 18,
@@ -422,7 +439,8 @@ const DUMMY_MOVIES = [
     translations: {
       en: {
         title: "Uri: The Surgical Strike (Hindi)",
-        description: "Based on the real-life 2016 surgical strikes conducted by the Indian Army in retaliation for a terrorist attack."
+        description: "Based on the real-life 2016 surgical strikes conducted by the Indian Army in retaliation for a terrorist attack.",
+        
       },
       hi: {
         title: "उरी: द सर्जिकल स्ट्राइक",
@@ -437,7 +455,8 @@ const DUMMY_MOVIES = [
         description: "Basé sur les véritables frappes chirurgicales menées par l'armée indienne en 2016 en représailles à une attaque terroriste."
       }
     },
-    posterUrl: "https://static.toiimg.com/thumb/msid-67956024,width-400,resizemode-4/67956024.jpg"
+    posterUrl: "https://static.toiimg.com/thumb/msid-67956024,width-400,resizemode-4/67956024.jpg",
+    rating: 9.2
   },
   {
     id: 19,
@@ -461,7 +480,8 @@ const DUMMY_MOVIES = [
         description: "Une saga en deux parties racontant la querelle tentaculaire entre trois familles criminelles dans la ville de Wasseypur."
       }
     },
-    posterUrl: "https://images.hindustantimes.com/rf/image_size_800x600/HT/p1/2012/06/15/Incoming/Pictures/872904_Wallpaper2.jpg"
+    posterUrl: "https://images.hindustantimes.com/rf/image_size_800x600/HT/p1/2012/06/15/Incoming/Pictures/872904_Wallpaper2.jpg",
+    rating: 9.3
   },
   {
     id: 20,
@@ -485,7 +505,8 @@ const DUMMY_MOVIES = [
         description: "Une femme enceinte arrive à Kolkata depuis Londres pour chercher son mari disparu, mais la ville semble nier qu'il ait jamais existé."
       }
     },
-    posterUrl: "https://mir-s3-cdn-cf.behance.net/project_modules/fs/b5de6137092751.56065c8e59a75.jpg"
+    posterUrl: "https://mir-s3-cdn-cf.behance.net/project_modules/fs/b5de6137092751.56065c8e59a75.jpg",
+    rating: 8.8
   }
 ];
 

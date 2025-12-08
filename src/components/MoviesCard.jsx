@@ -142,6 +142,9 @@ const MovieCard = ({ movie, onBookmark, isBookmarked }) => {
         <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full uppercase tracking-wider">
             {movie.genre.split(',')[0].trim()}
         </span>
+        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full uppercase tracking-wider">
+            {movie.rating}
+        </span>
       </div>
 
       <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 flex-grow">
