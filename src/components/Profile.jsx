@@ -5,21 +5,22 @@ import { useNavigate } from "react-router-dom";
 
 // Mock User Data for demonstration
 const mockUser = {
-  name: "NewsPulse User",
-  email: "user@newspulse.com",
+  name: "FilmMate User",
+  email: "user@filmmate.com",
   memberSince: "October 2025",
   lastLogin: "Today",
 };
 
 // Available categories for preferences (matching those in Home.jsx)
 const CATEGORIES = [
-    "General",
-    "Business",
-    "Technology",
-    "Sports",
-    "Entertainment",
-    "Health",
-    "Science",
+  "action",
+  "comedy",
+  "drama",
+  "horror",
+  "romance",
+  "sci-fi",
+  "animation",
+  "documentary"
 ];
 
 // 2. Remove 'setPage' prop
@@ -126,7 +127,7 @@ const Profile = ({ bookmarks = [] }) => {
                     >
                         <span className="flex items-center gap-3 text-lg font-medium text-gray-800 dark:text-gray-200">
                             <HiArrowLeft className="w-6 h-6 text-green-500" />
-                            Return to News Feed
+                            Return to Movies Feed
                         </span>
                         <span className="text-green-500 font-bold text-xl">&rarr;</span>
                     </button>
@@ -143,7 +144,7 @@ const Profile = ({ bookmarks = [] }) => {
                 {/* Daily Email Toggle */}
                 <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-4">
                     <label htmlFor="dailyEmail" className="text-lg font-medium text-gray-800 dark:text-gray-200">
-                        Receive Daily Top News Digest?
+                        Receive Daily Top Movies Digest?
                     </label>
                     <input
                         type="checkbox"

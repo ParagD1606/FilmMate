@@ -30,24 +30,24 @@ ChartJS.register(
 );
 
 // ================== STOP WORDS ==================
+// Updated for movies context
 const STOP_WORDS = new Set([
   "a","an","and","are","as","at","be","but","by","for","if","in","into","is","it","no",
   "not","of","on","or","such","that","the","their","then","there","these","they","this",
   "to","was","will","with","from","i","you","he","she","we","us","my","your","his","her",
-  "our","article","news","said","say","year","week","day","can","just","like","get","new",
-  "time","also","one","two","has","would","could","which","more","about","out","up","down",
-  "back","make","may","must","only","do","did","have","had","been","use","using","according",
-  "source","report","read","know","story","post","show","will","go","find","people","than",
-  "them","when","what","where","why","who","how","its","their","our","all","any","most",
-  "some","much","many","very","up","down","over","under","before","after","while","when",
-  "what","where","why","who","whom","whose","since","until","upon","through","into","onto",
-  "off","between","among","around","above","below","next","last","first","second","third",
-  "like","than","then","so","we","us","our","them","they","their",
+  "our","movie","film","story","character","characters","scene","scenes","plot","said","say",
+  "year","week","day","can","just","like","get","new","time","also","one","two","has","would",
+  "could","which","more","about","out","up","down","back","make","may","must","only","do",
+  "did","have","had","been","use","using","according","report","read","know","post","show",
+  "go","find","people","than","them","when","what","where","why","who","how","its","all",
+  "any","most","some","much","many","very","over","under","before","after","while","since",
+  "until","upon","through","onto","off","between","among","around","above","below","next",
+  "last","first","second","third","so"
 ]);
 
 // ================== HELPERS ==================
-const getWordFrequencies = (articles) => {
-  const text = articles.map((a) => `${a.title} ${a.description || ""}`).join(" ").toLowerCase();
+const getWordFrequencies = (movies) => {
+  const text = movies.map((a) => `${a.title} ${a.description || ""}`).join(" ").toLowerCase();
   const cleaned = text.replace(/[^a-z\s]/g, " ");
   const words = cleaned.split(/\s+/).filter((w) => w.length >= 4 && !STOP_WORDS.has(w));
 
@@ -62,9 +62,9 @@ const getWordFrequencies = (articles) => {
     .slice(0, 100);
 };
 
-const calculateSourceDistribution = (articles) => {
-  const counts = articles.reduce((acc, a) => {
-    const source = a.source?.name || "Unknown";
+const calculateSourceDistribution = (movies) => {
+  const counts = movies.reduce((acc, a) => {
+    const source = a.source?.name || "Unknown Studio";
     acc[source] = (acc[source] || 0) + 1;
     return acc;
   }, {});
@@ -74,13 +74,13 @@ const calculateSourceDistribution = (articles) => {
   const others = sorted.slice(8).reduce((sum, [, c]) => sum + c, 0);
 
   const final = top.map(([label, value]) => ({ label, value }));
-  if (others > 0) final.push({ label: "Other Sources", value: others });
+  if (others > 0) final.push({ label: "Other Studios", value: others });
 
   return final;
 };
 
-const calculateCategoryDistribution = (articles) => {
-  const counts = articles.reduce((acc, a) => {
+const calculateCategoryDistribution = (movies) => {
+  const counts = movies.reduce((acc, a) => {
     const category = a.category || "General";
     acc[category] = (acc[category] || 0) + 1;
     return acc;
@@ -88,7 +88,7 @@ const calculateCategoryDistribution = (articles) => {
   return Object.entries(counts).map(([label, value]) => ({ label, value }));
 };
 
-const calculateTimeSeries = (articles) => {
+const calculateTimeSeries = (movies) => {
   const counts = {};
   const now = new Date();
   for (let i = 0; i < 7; i++) {
@@ -98,7 +98,7 @@ const calculateTimeSeries = (articles) => {
     counts[key] = 0;
   }
 
-  articles.forEach((a) => {
+  movies.forEach((a) => {
     const date = new Date(a.publishedAt).toISOString().slice(0, 10);
     if (counts[date] !== undefined) counts[date]++;
   });
@@ -115,13 +115,13 @@ const generateColors = (count) => {
 };
 
 // ================== MAIN COMPONENT ==================
-const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQuery }) => {
+const Analytics = ({ articles: movies, country, setCountry, SUPPORTED_COUNTRIES, searchQuery }) => {
 
-  const sourceData = useMemo(() => calculateSourceDistribution(articles), [articles]);
-  const wordData = useMemo(() => getWordFrequencies(articles), [articles]);
-  const categoryData = useMemo(() => calculateCategoryDistribution(articles), [articles]);
-  const timeData = useMemo(() => calculateTimeSeries(articles), [articles]);
-  const totalArticles = articles.length;
+  const sourceData = useMemo(() => calculateSourceDistribution(movies), [movies]);
+  const wordData = useMemo(() => getWordFrequencies(movies), [movies]);
+  const categoryData = useMemo(() => calculateCategoryDistribution(movies), [movies]);
+  const timeData = useMemo(() => calculateTimeSeries(movies), [movies]);
+  const totalMovies = movies.length;
 
   const currentCountryName = useMemo(() => {
     return SUPPORTED_COUNTRIES.find((c) => c.code === country)?.name || country.toUpperCase();
@@ -129,33 +129,32 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
 
   const handleCountryChange = (e) => setCountry(e.target.value);
 
-  if (totalArticles === 0) {
-  return (
-    <div className="max-w-7xl mx-auto p-6 pt-24 min-h-screen flex flex-col justify-center items-center text-center">
-      <h2 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">
-        News Analytics
-      </h2>
-      <p className="text-lg text-gray-600 dark:text-gray-400">
-        No articles available to generate analytics
-        {searchQuery ? (
-          <>
-            {" "}for "<span className="font-semibold text-blue-500">{searchQuery}</span>".
-          </>
-        ) : (
-          ". "
-        )}
-        <br />Please change search criteria or select a different country or category.
-      </p>
-    </div>
-  );
-}
-
+  if (totalMovies === 0) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 pt-24 min-h-screen flex flex-col justify-center items-center text-center">
+        <h2 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white">
+          Movie Analytics
+        </h2>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          No movies available to generate analytics
+          {searchQuery ? (
+            <>
+              {" "}for "<span className="font-semibold text-blue-500">{searchQuery}</span>".
+            </>
+          ) : (
+            ". "
+          )}
+          <br />Please change search criteria or select a different country or genre.
+        </p>
+      </div>
+    );
+  }
 
   // Chart Data
   const pieData = {
     labels: sourceData.map((d) => d.label),
     datasets: [{
-      label: "# of Articles",
+      label: "# of Movies",
       data: sourceData.map((d) => d.value),
       backgroundColor: generateColors(sourceData.length),
       borderColor: "#fff",
@@ -174,8 +173,8 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
         callbacks: {
           label: (context) => {
             const value = context.parsed || 0;
-            const percent = ((value / totalArticles) * 100).toFixed(1);
-            return `${context.label}: ${value} articles (${percent}%)`;
+            const percent = ((value / totalMovies) * 100).toFixed(1);
+            return `${context.label}: ${value} movies (${percent}%)`;
           },
         },
       },
@@ -185,7 +184,7 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
   const barData = {
     labels: categoryData.map((d) => d.label),
     datasets: [{
-      label: "# of Articles",
+      label: "# of Movies",
       data: categoryData.map((d) => d.value),
       backgroundColor: generateColors(categoryData.length),
     }],
@@ -203,7 +202,7 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
   const lineData = {
     labels: timeData.map((d) => d.date),
     datasets: [{
-      label: "# of Articles",
+      label: "# of Movies",
       data: timeData.map((d) => d.value),
       fill: false,
       borderColor: "#3b82f6",
@@ -229,10 +228,10 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between pb-4 mb-4 border-b border-blue-500/30">
           <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
             <HiChartBar className="w-9 h-9 text-blue-600" />
-            News Analytics Dashboard
+            Movie Analytics Dashboard
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 mt-3 sm:mt-0 hidden sm:block">
-            Analyzing <span className="font-bold text-blue-500">{totalArticles}</span> articles in{" "}
+            Analyzing <span className="font-bold text-blue-500">{totalMovies}</span> movies in{" "}
             <span className="font-semibold text-blue-400">{currentCountryName}</span>
           </p>
         </div>
@@ -268,7 +267,7 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
         {/* PIE */}
         <div className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
-            Source Distribution
+            Studio Distribution
           </h3>
           <div className="flex justify-center items-center h-96">
             <Pie data={pieData} options={pieOptions} />
@@ -278,7 +277,7 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
         {/* CATEGORY BAR */}
         <div className="bg-gradient-to-b from-white to-blue-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
-            Articles by Category
+            Movies by Genre
           </h3>
           <div className="flex justify-center items-center h-96">
             <Bar data={barData} options={barOptions} />
@@ -312,7 +311,7 @@ const Analytics = ({ articles, country, setCountry, SUPPORTED_COUNTRIES, searchQ
         {/* LINE */}
         <div className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
           <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
-            Articles Over Last 7 Days
+            Movies Added Over Last 7 Days
           </h3>
           <div className="flex justify-center items-center h-96">
             <Line data={lineData} options={lineOptions} />
