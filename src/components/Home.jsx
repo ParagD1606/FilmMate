@@ -45,13 +45,22 @@ const Home = ({
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
-        (movie) =>
-          movie.title.toLowerCase().includes(query) ||
-          movie.description.toLowerCase().includes(query) ||
-          movie.genre.toLowerCase().includes(query)
+        (movie) => {
+          // FIX: Safely access English translations for searching
+          const enTitle = movie.translations?.en?.title?.toLowerCase() || "";
+          const enDescription = movie.translations?.en?.description?.toLowerCase() || "";
+          const movieGenre = movie.genre.toLowerCase();
+
+          return (
+            enTitle.includes(query) ||
+            enDescription.includes(query) ||
+            movieGenre.includes(query)
+          );
+        }
       );
     } else if (genre) {
       const selectedGenre = genre.toLowerCase();
+      // Keep genre filter as it works on the top-level 'genre' string property
       result = result.filter(movie =>
         movie.genre.toLowerCase().includes(selectedGenre.toLowerCase())
       );
