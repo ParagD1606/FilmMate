@@ -32,7 +32,11 @@ const processTextForWordCloud = (movies) => {
   const regex = /[^\w\s]/g;
   
   movies.forEach(movie => {
-    const text = `${movie.title} ${movie.description}`.toLowerCase().replace(regex, ' ');
+    // FIX: Access title and description from the nested 'translations.en' object.
+    const english = movie.translations?.en;
+    if (!english) return; // Skip if English translation is missing
+    
+    const text = `${english.title} ${english.description}`.toLowerCase().replace(regex, ' ');
     const words = text.split(/\s+/).filter(word => word.length > 2 && !STOP_WORDS.has(word));
     
     words.forEach(word => {
@@ -61,6 +65,7 @@ const processData = (movies) => {
     yearCounts[year] = (yearCounts[year] || 0) + 1;
   });
 
+  // wordCounts will now be correctly calculated
   const wordCounts = processTextForWordCloud(movies);
 
   return { genreCounts, yearCounts, wordCounts };
