@@ -172,10 +172,11 @@ const Landing = () => {
   />
 
   <FeatureCard
-      icon={<HiChartPie className="w-8 h-8" />}
-      title="Movie Analytics"
-      description="Advances and simplifies movie analytics about movie and Production"
-  />
+    icon={<HiChartPie className="w-8 h-8" />}
+    title="Multilingual Support"
+    description="View movies, features, and analytics in multiple languages for a global audience"
+/>
+
 
 </div>
 

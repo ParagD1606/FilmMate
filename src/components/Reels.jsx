@@ -5,30 +5,38 @@ import { DUMMY_MOVIES } from '../services/movieData';
 // -----------------------
 // Text-to-Speech Helper
 // -----------------------
-const speakText = (movie) => {
-    // Cancel any existing speech
-    if (window.speechSynthesis.speaking) {
+const speakMovie = (movie) => {
+    if (!movie) return;
+
+    // Stop any existing speech
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
         window.speechSynthesis.cancel();
     }
 
-    const text = `
-        Now playing: ${movie.title}.
-        Released in ${movie.year}.
-        Genre: ${movie.genre}.
-        Description: ${movie.description}.
-    `;
+    const utterance = new SpeechSynthesisUtterance(
+        `Now playing: ${movie.title}. Released in ${movie.year}. ${movie.description}`
+    );
 
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // Optional: Pick first English voice
-    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-    if (voices.length > 0) {
-        utterance.voice = voices[0];
-    }
-
-    utterance.rate = 1;  // natural speed
-    utterance.pitch = 1; // natural pitch
+    utterance.lang = 'en-US';
+    utterance.rate = 1;
+    utterance.pitch = 1;
     utterance.volume = 1;
+
+    // Use first available English voice for clarity
+    const setVoice = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice = voices.find(v => v.lang.startsWith('en'));
+        if (englishVoice) {
+            utterance.voice = englishVoice;
+        }
+    };
+
+    setVoice();
+
+    // Fallback if voices load asynchronously
+    if (window.speechSynthesis.onvoiceschanged === null) {
+        window.speechSynthesis.onvoiceschanged = setVoice;
+    }
 
     window.speechSynthesis.speak(utterance);
 };
@@ -38,46 +46,31 @@ const speakText = (movie) => {
 // -----------------------
 const ReelItem = ({ movie, isActive, isMuted, setIsMuted }) => {
 
-    // Handle TTS activation/deactivation
     useEffect(() => {
-    if (isActive && !isMuted) {
-        speakText(movie);
-    } else {
-        // Stop speech if not active or muted
+        // Cancel speech first
         window.speechSynthesis.cancel();
-    }
 
-    return () => window.speechSynthesis.cancel();
-}, [isActive, isMuted, movie]);
-
-
-    // Toggle mute/pause/resume
-    const toggleMute = useCallback(() => {
-    setIsMuted(prev => {
-        const newMuteState = !prev;
-
-        if (newMuteState) {
-            // Muted: stop speech immediately
-            window.speechSynthesis.cancel();
-        } else {
-            // Unmuted: speak current active movie again
-            if (isActive) {
-                speakText(movie);
-            }
+        if (isActive && !isMuted) {
+            speakMovie(movie);
         }
 
-        return newMuteState;
-    });
-}, [isActive, movie]);
+        return () => window.speechSynthesis.cancel();
+    }, [isActive, isMuted, movie]);
 
-
-    const backgroundUrl = movie.posterUrl || '/fallback.jpg';
+    const toggleMute = useCallback(() => {
+        setIsMuted(prev => {
+            const newState = !prev;
+            window.speechSynthesis.cancel();
+            if (!newState && isActive) speakMovie(movie);
+            return newState;
+        });
+    }, [isActive, movie]);
 
     return (
         <div
             className="snap-start w-full max-w-[420px] h-screen relative flex items-end justify-center p-4 bg-black overflow-hidden mx-auto"
             style={{
-                backgroundImage: `url(${backgroundUrl})`,
+                backgroundImage: `url(${movie.posterUrl || '/fallback.jpg'})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
             }}
@@ -86,11 +79,9 @@ const ReelItem = ({ movie, isActive, isMuted, setIsMuted }) => {
 
             <div className="relative z-10 w-full flex items-end justify-between">
 
-                {/* Left: Movie Info */}
+                {/* Movie Info */}
                 <div className="text-white max-w-[70%]">
-                    <h2 className="text-3xl font-bold line-clamp-2">
-                        {movie.title} ({movie.year})
-                    </h2>
+                    <h2 className="text-3xl font-bold line-clamp-2">{movie.title} ({movie.year})</h2>
                     <p className="text-sm text-gray-300 mt-1 line-clamp-3">{movie.description}</p>
                     <div className="flex items-center space-x-2 mt-2">
                         <HiStar className="w-5 h-5 text-yellow-400" />
@@ -98,14 +89,14 @@ const ReelItem = ({ movie, isActive, isMuted, setIsMuted }) => {
                     </div>
                 </div>
 
-                {/* Right: Actions */}
+                {/* Actions */}
                 <div className="flex flex-col items-center space-y-5 text-white">
-                    {/* Play Button (Placeholder) */}
+                    {/* Play Button */}
                     <button className="p-3 bg-white/20 rounded-full hover:bg-white/40 transition">
                         <HiPlay className="w-6 h-6" />
                     </button>
 
-                    {/* Mute/Unmute Button */}
+                    {/* Mute/Unmute */}
                     <button
                         onClick={toggleMute}
                         className="p-3 bg-white/20 rounded-full hover:bg-white/40 transition"
@@ -119,10 +110,11 @@ const ReelItem = ({ movie, isActive, isMuted, setIsMuted }) => {
 
                     {/* Speaking Indicator */}
                     {isActive && !isMuted && (
-                        <span className="text-blue-400 text-xs mt-1 animate-pulse">Speaking...</span>
+                        <span className="text-blue-400 text-xs mt-1 animate-pulse">
+                            {window.speechSynthesis.speaking ? "Speaking..." : "Ready"}
+                        </span>
                     )}
                 </div>
-
             </div>
         </div>
     );
