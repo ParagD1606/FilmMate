@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NewsCard from "./NewsCard";
+import NewsCard from "./MoviesCard";
 import { HiSearch, HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
 const PAGE_SIZE = 6;

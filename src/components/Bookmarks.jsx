@@ -1,6 +1,6 @@
 import React from "react";
 import { HiBookmark, HiArrowLeft } from "react-icons/hi"; 
-import NewsCard from "./NewsCard";
+import NewsCard from "./MoviesCard";
 import { useNavigate } from "react-router-dom"; 
 
 const Bookmarks = ({ bookmarks, handleBookmark }) => {
