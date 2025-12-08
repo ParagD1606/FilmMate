@@ -2,21 +2,34 @@ import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Aurora from "../Usages/Aurora";
 import LandingFooter from "./LandingFooter";
-import { HiChartBar, HiBookmark, HiHome, HiVolumeUp, HiArrowDown, HiSearch, HiMoon, HiArrowRight, HiViewList, HiNewspaper } from "react-icons/hi"; 
+import { 
+  HiBookmark, 
+  HiSearch, 
+  HiEye, 
+  HiSun, 
+  HiFilm, 
+  HiChartPie,
+  HiArrowDown,
+  HiHome,
+  HiChartBar,
+  HiMoon,
+  HiArrowRight,
+  HiViewList,
+  HiVolumeUp  
+} from "react-icons/hi"; 
 
 const FeatureCard = ({ icon, title, description }) => (
-    <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl transition duration-500 hover:bg-white/20 hover:scale-[1.02] cursor-default">
-        <div className="text-blue-400 mb-3">{icon}</div>
-        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-300 text-sm">{description}</p>
-    </div>
+  <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl transition duration-500 hover:bg-white/20 hover:scale-[1.02] cursor-default">
+      <div className="text-blue-400 mb-3">{icon}</div>
+      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+      <p className="text-gray-300 text-sm">{description}</p>
+  </div>
 );
 
 const Landing = () => {
   const featuresRef = useRef(null);
   const navigate = useNavigate(); 
   
-  // Function to smoothly scroll down to the features section
   const scrollToFeatures = () => {
     featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -26,7 +39,7 @@ const Landing = () => {
       
       {/* 1. Hero Section */}
       <div className="relative w-full h-screen overflow-hidden">
-        {/* Aurora background */}
+        
         <div className="absolute inset-0">
           <Aurora
             colorStops={["#29DDEA","#4D64F0",  "#E248DD"]} 
@@ -36,7 +49,6 @@ const Landing = () => {
           />
         </div>
 
-        {/* Overlay content (Hero) */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white p-6">
           
           <h1 
@@ -49,7 +61,7 @@ const Landing = () => {
                 opacity: 0,
             }}
           >
-            News<span className="text-blue-400">Pulse</span>
+            Film<span className="text-blue-400">Mate</span>
           </h1>
           
           <p 
@@ -62,13 +74,12 @@ const Landing = () => {
                 opacity: 0,
             }}
           >
-            Your personalized source for trending headlines, instant audio reels, and in-depth analytics.
+            Explore movies, search your favorites, and build your personal watchlist instantly.
           </p>
           
           <div className="flex space-x-4">
-              {/* Get Started Button*/}
-              <button
 
+              <button
                 onClick={() => navigate("/login")} 
                 className="px-8 py-3 bg-blue-500 text-white text-lg font-semibold rounded-full 
                            hover:bg-blue-600 transition duration-300 transform hover:scale-105 shadow-xl shadow-blue-500/30
@@ -82,7 +93,6 @@ const Landing = () => {
                 Get Started
               </button>
               
-              {/* Features Button (Scroll Down) */}
               <button
                 onClick={scrollToFeatures}
                 className="px-8 py-3 bg-transparent border-2 border-white text-white text-lg font-semibold rounded-full 
@@ -100,7 +110,7 @@ const Landing = () => {
         </div>
       </div>
       
-      {/* 2. Features Section - This is the scroll target */}
+      {/* 2. Features Section */}
       <div 
         ref={featuresRef} 
         id="features" 
@@ -112,65 +122,66 @@ const Landing = () => {
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            
-            <FeatureCard
-                icon={<HiHome className="w-8 h-8" />}
-                title="Categorized Home Feed"
-                description="Explore top headlines across various categories (Tech, Sports, Business, etc.) for instant updates."
-            />
-            
-            <FeatureCard
-                icon={<HiSearch className="w-8 h-8" />}
-                title="Instant Global Search"
-                description="Find articles by any keyword across thousands of sources instantly with our powerful search."
-            />
-            
-            <FeatureCard
-                icon={<HiBookmark className="w-8 h-8" />}
-                title="Personalized Bookmarking"
-                description="Save your favorite articles with a single tap and manage your curated reading list easily."
-            />
-            
-            <FeatureCard
-                icon={<HiVolumeUp className="w-8 h-8" />}
-                title="Audio Reels"
-                description="Swipe through news in a 'Reels' format and listen to the article summary using Text-to-Speech."
-            />
-            
-            <FeatureCard
-                icon={<HiChartBar className="w-8 h-8" />}
-                title="Data Analytics Dashboard"
-                description="Visualize source distribution and identify the most frequent keywords trending in the news."
-            />
-            
-            <FeatureCard
-                icon={<HiMoon className="w-8 h-8" />}
-                title="Optimized Theme Switching"
-                description="Toggle effortlessly between light and dark modes to ensure a comfortable reading experience day or night."
-            />
-            
-            <FeatureCard
-                icon={<HiArrowRight className="w-8 h-8" />}
-                title="Direct Source Reading"
-                description="Easily navigate from the summary card to the full, original article on the source website."
-            />
 
-            <FeatureCard
-                icon={<HiViewList className="w-8 h-8" />}
-                title="Advanced Pagination and Caching"
-                description="Experience smooth navigation through extensive search results with optimized pagination controls and intelligent caching mechanisms."
-            />
-            
-            <FeatureCard
-                icon={<HiNewspaper className="w-8 h-8" />}
-                title="Custom Daily Email Digest"
-                description="Get top news headlines delivered daily to your inbox, filtered exclusively by your preferred categories."
-            />
-          </div>
+  <FeatureCard
+      icon={<HiHome className="w-8 h-8" />}
+      title="Movie Categories"
+      description="Explore movies grouped by categories like Action, Sci-Fi, Comedy, Drama and more."
+  />
+
+  <FeatureCard
+      icon={<HiSearch className="w-8 h-8" />}
+      title="Smart Local Search"
+      description="Find movies instantly from the local database using keyword-based search."
+  />
+
+  <FeatureCard
+      icon={<HiBookmark className="w-8 h-8" />}
+      title="Personal Watchlist"
+      description="Save your must-watch movies and manage your personal watchlist easily."
+  />
+
+  <FeatureCard
+      icon={<HiVolumeUp className="w-8 h-8" />}
+      title="Movie Reels"
+      description="Watch short mini-reels of trailers or clips from trending movies in a modern swipe UI."
+  />
+
+  <FeatureCard
+      icon={<HiChartBar className="w-8 h-8" />}
+      title="Movie Analytics"
+      description="See genre distribution and identify the most popular movie themes using charts."
+  />
+
+  <FeatureCard
+      icon={<HiMoon className="w-8 h-8" />}
+      title="Dark/Light Theme"
+      description="Switch between light and dark modes for a comfortable browsing experience."
+  />
+
+  <FeatureCard
+      icon={<HiArrowRight className="w-8 h-8" />}
+      title="Detailed Movie Info"
+      description="Open full movie details cards showing year, genre, cast, and poster."
+  />
+
+  <FeatureCard
+      icon={<HiViewList className="w-8 h-8" />}
+      title="Advanced Pagination & Caching"
+      description="Smooth navigation through large movie lists with optimized pagination and intelligent caching."
+  />
+
+  <FeatureCard
+      icon={<HiChartPie className="w-8 h-8" />}
+      title="Movie Analytics"
+      description="Advances and simplifies movie analytics about movie and Production"
+  />
+
+</div>
+
         </div>
       </div>
 
-      {/* Footer ( Call to Action) */}
       <LandingFooter />
     </div>
   );

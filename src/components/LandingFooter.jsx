@@ -13,26 +13,21 @@ const LandingFooter = () => {
     { icon: <FaLinkedinIn size={20} />, href: "#" },
   ];
 
-  
-
-  // Helper function for smooth scrolling to top
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
     
-  // Helper function for navigation from the footer
   const handleFooterNavigation = (path) => {
     navigate(path);
     scrollToTop(); 
   };
 
   const handleFeatureScroll = () => {
-    
      if (window.location.pathname === '/') {
         document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
      } else {
         navigate("/");
-    }
+     }
   };
 
   return (
@@ -42,13 +37,13 @@ const LandingFooter = () => {
         {/* Logo and Scroll to Top */}
         <div className="w-full md:w-1/4">
             <span className="text-white text-3xl font-bold">
-                News<span className="text-blue-500">Pulse</span>
+                Film<span className="text-blue-500">Mate</span>
             </span>
             <p className="text-sm mt-3 text-gray-500">
-                Trending Headlines Analyzer - Data-driven news, simplified.
+                Your personal movie explorer & watchlist companion.
             </p>
-            {/* Scroll to Top Button */}
-             <button 
+
+            <button 
                 onClick={scrollToTop}
                 className="mt-6 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-all duration-300 shadow-lg flex items-center gap-2"
                 title="Back to Top"
@@ -58,12 +53,13 @@ const LandingFooter = () => {
             </button>
         </div>
 
-        {/* Newsletter / Call to Action  */}
+        {/* Newsletter */}
         <div className="w-full md:w-1/4">
-          <h3 className="text-xl font-bold text-white mb-4 border-b border-gray-800 pb-2">Stay Updated</h3>
+          <h3 className="text-xl font-bold text-white mb-4 border-b border-gray-800 pb-2">Stay in the Loop</h3>
           <p className="text-gray-400 mb-4 text-sm">
-            Receive the latest headlines and exclusive updates directly to your inbox.
+            Get updates on new movies and trending picks.
           </p>
+
           <div className="flex">
             <input
               type="email"
@@ -79,12 +75,11 @@ const LandingFooter = () => {
           </div>
         </div>
 
-        {/* 3. Quick Links */}
+        {/* Quick Links */}
         <div className="w-full md:w-1/4">
           <h3 className="text-xl font-bold text-white mb-4 border-b border-gray-800 pb-2">Navigate</h3>
           <ul className="space-y-3 text-gray-400">
             <li>
-              
                 <button onClick={() => handleFooterNavigation("/")} className="hover:text-blue-400 transition text-base">Home</button>
             </li>
             <li>
@@ -96,12 +91,10 @@ const LandingFooter = () => {
                 </button>
             </li>
             <li>
-              
-                <button onClick={() => handleFooterNavigation("/bookmarks")} className="hover:text-blue-400 transition text-base">Bookmarks</button>
+                <button onClick={() => handleFooterNavigation("/watchlist")} className="hover:text-blue-400 transition text-base">Watchlist</button>
             </li>
             <li>
-              
-                <button onClick={() => handleFooterNavigation("/analytics")} className="hover:text-blue-400 transition text-base">Analytics</button>
+                <button onClick={() => handleFooterNavigation("/explore")} className="hover:text-blue-400 transition text-base">Explore Movies</button>
             </li>
           </ul>
         </div>
@@ -115,7 +108,6 @@ const LandingFooter = () => {
                     key={index}
                     href={item.href} 
                     className="text-gray-500 hover:text-blue-400 transition transform hover:scale-110"
-                    aria-label={`Follow us on ${item.icon.type.name.replace('Fa', '')}`} 
                 >
                     {item.icon}
                 </a>
@@ -124,9 +116,8 @@ const LandingFooter = () => {
         </div>
       </div>
 
-      {/* Bottom copyright */}
       <div className="mt-16 pt-8 text-center text-sm text-gray-500 border-t border-gray-800">
-        &copy; {new Date().getFullYear()} NewsPulse. All rights reserved.
+        &copy; {new Date().getFullYear()} FilmMate. All rights reserved.
       </div>
     </footer>
   );
